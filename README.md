@@ -46,7 +46,7 @@ Place the following locally before training; large weights are not in Git.
 | --- | --- | --- | --- |
 | Wan2.2 TI2V-5B Diffusers snapshot | [Wan-AI/Wan2.2-TI2V-5B-Diffusers](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers),revision `b8fff7315c768468a5333511427288870b2e9635` | Apache-2.0 | `weights/wan/` |
 | FlashWorld NVS pretraining checkpoint | [nightkiller/FlashWorldPretrain](https://huggingface.co/nightkiller/FlashWorldPretrain),revision `896f3964301821d0bdd92ccb9560fbf51b855599` | CC BY-NC-SA 4.0 in the pinned model card | `weights/flashworld/pretrain.ckpt` |
-| TokenGS official base1024 | [TokenGS weights](https://huggingface.co/jiaweir/tokengs),`checkpoints/dl3dv_base.safetensors` | Conflicting upstream declarations; redistribution not cleared (see below) | `weights/tokengs/dl3dv_base.safetensors` |
+| TokenGS official base1024 | [TokenGS weights](https://huggingface.co/jiaweir/tokengs),`checkpoints/dl3dv_base.safetensors` | Apache-2.0 in root release; supplementary card differs (see notices) | `weights/tokengs/dl3dv_base.safetensors` |
 
 Wan requires its`transformer/`, `vae/`, `text_encoder/`and`tokenizer/`directories.
 Download the complete pinned snapshot using the Hugging Face CLI, for example:
@@ -69,10 +69,21 @@ The masked 512-token empty UMT5 prompt is cached on first training startup.
 LPIPS-VGG weights are downloaded/cached by LPIPS/torchvision at first evaluation;
 prepare the cache ahead of time on offline machines.
 
-**Trained DiTGS weights are not included,and no public trained-weight download
-is configured in this source release.** Training produces the required raw
-`model.pt`; supplying that full-model package is sufficient for inference.
-It includes the Wan/TokenGS parameters,empty prompt and all normalization buffers.
+**Public main-model checkpoint:** [qyk21/DiTGS](https://huggingface.co/qyk21/DiTGS).
+This is the camera-fixed **raw warmup10k + joint20k final**, approximately 22.055 GB,
+with original tensor dtypes and all inference buffers. It contains the fine-tuned
+Wan/GS parameters, frozen VAE/image encoder and cached empty prompt. It excludes
+optimizer, EMA and RNG state. Separate pretrained downloads above are needed for
+training from initialization; loading this full package does not require them.
+
+```bash
+hf download qyk21/DiTGS --revision 4c82bf40340625488cb3ca0e10c719d0684f55f7 --local-dir weights/ditgs
+```
+
+The `model.pt` SHA256 is
+`d20e90297953151a90ac53c9022ddf8530eaa7f6359e3e74a7bec8654e2c48c9`.
+The model card contains the checkpoint license, attribution and component sizes.
+Training your own model also produces a compatible `outputs/residual/model.pt`.
 
 ## DL3DV data
 
@@ -126,8 +137,8 @@ Use`--no-export-full`to skip that extra export.
 ## Standard1/2-view inference
 
 ```bash
-bash scripts/infer.sh 1 --checkpoint outputs/residual/model.pt --output outputs/residual/dl3dv_1view
-bash scripts/infer.sh 2 --checkpoint outputs/residual/model.pt --output outputs/residual/dl3dv_2view
+bash scripts/infer.sh 1 --checkpoint weights/ditgs/model.pt --output outputs/residual/dl3dv_1view
+bash scripts/infer.sh 2 --checkpoint weights/ditgs/model.pt --output outputs/residual/dl3dv_2view
 ```
 
 The default uses one GPU with sufficient memory for the full model.
@@ -171,17 +182,20 @@ Source code is released under **Apache-2.0**; see [LICENSE](LICENSE) and
 TokenGS source copyright and attribution are retained. Installed dependencies
 keep their own licenses.
 
-**Trained-weight redistribution is pending upstream license clarification.**
-The pinned [FlashWorldPretrain model card](https://huggingface.co/nightkiller/FlashWorldPretrain/blob/896f3964301821d0bdd92ccb9560fbf51b855599/README.md)
-declares **CC BY-NC-SA 4.0**, which requires noncommercial sharing, attribution,
-change notices and ShareAlike terms for adaptations. FlashWorld's Apache-2.0
-source license does not replace its weight terms. The TokenGS root README says
-Apache-2.0, but its [separate model card](https://huggingface.co/jiaweir/tokengs/blob/a7eb20340b99abd29b554c29c339446aebccff36/model_card/overview.md)
-explicitly names the [NVIDIA Internal Scientific Research and Development Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-internal-scientific-research-and-development-model-license/),
-whose section 3.1 prohibits distribution of the model and derivative models.
-Until the rights holder resolves these declarations for the exact base checkpoint,
-this project does not assert permission to redistribute combined DiTGS weights.
-Splitting files or publishing weight deltas does not by itself resolve that issue.
+The published checkpoint uses **CC BY-NC-SA 4.0**, inheriting the
+[FlashWorldPretrain weight terms](https://huggingface.co/nightkiller/FlashWorldPretrain/blob/896f3964301821d0bdd92ccb9560fbf51b855599/README.md),
+and is intended for noncommercial academic research. Retain attribution, identify
+modifications and comply with ShareAlike when sharing adaptations. The code and
+checkpoint licenses are separate.
+
+The TokenGS root release README states Apache-2.0; an additional model card at the
+same upstream revision names a restrictive NVIDIA internal-research license.
+This weight release follows the root release declaration and preserves the
+inconsistent statement explicitly in its
+[upstream notices](https://huggingface.co/qyk21/DiTGS/blob/main/UPSTREAM_NOTICES.md).
+No separate written upstream clarification is claimed. Research purpose alone
+does not override applicable upstream terms. See the model repository's LICENSE,
+NOTICE and model card for attribution and component-specific details.
 
 [DL3DV-10K](https://github.com/DL3DV-10K/Dataset/blob/main/License.md) has its own
 noncommercial research/education and data-access terms. Obtain data from upstream;

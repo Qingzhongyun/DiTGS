@@ -15,12 +15,14 @@ subject to their respective upstream terms; they are not distributed in this Git
 FlashWorld initialization retains only the pretrained latent-velocity transformer;
 its Gaussian-feature output channels and reconstruction decoder are not used.
 
-Weight-license clarification (2026-11-11):
+Weight release (2026-11-11):
 The Apache-2.0 license in this source tree does not license model checkpoints.
-FlashWorldPretrain revision 896f3964301821d0bdd92ccb9560fbf51b855599
-identifies its weights as CC BY-NC-SA 4.0. TokenGS has conflicting declarations:
-its root README mentions Apache-2.0, while model_card/overview.md names the NVIDIA
-Internal Scientific Research and Development Model License. That model license
-prohibits redistribution of models and derivative models. No trained-weight
-redistribution permission is asserted pending upstream clarification.
-See README.md for source links and the exact TokenGS base-file checksum.
+Public DiTGS weights: https://huggingface.co/qyk21/DiTGS
+Checkpoint license: CC BY-NC-SA 4.0, inheriting FlashWorldPretrain revision
+896f3964301821d0bdd92ccb9560fbf51b855599. Intended use: noncommercial research.
+TokenGS's root release README states Apache-2.0, while an additional model card
+names the NVIDIA Internal Scientific Research and Development Model License.
+The weight release follows the root release declaration; both statements are
+preserved and linked in the model repository's UPSTREAM_NOTICES.md. No separate
+written upstream clarification is claimed. All applicable upstream terms remain.
+See the model repository's LICENSE, NOTICE, model card and exact release checksum.
