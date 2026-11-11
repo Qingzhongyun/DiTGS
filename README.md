@@ -42,11 +42,11 @@ attention uses PyTorch SDPA.
 
 Place the following locally before training; large weights are not in Git.
 
-| Component | Source | Weight terms | Default local path |
-| --- | --- | --- | --- |
-| Wan2.2 TI2V-5B Diffusers snapshot | [Wan-AI/Wan2.2-TI2V-5B-Diffusers](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers),revision `b8fff7315c768468a5333511427288870b2e9635` | Apache-2.0 | `weights/wan/` |
-| FlashWorld NVS pretraining checkpoint | [nightkiller/FlashWorldPretrain](https://huggingface.co/nightkiller/FlashWorldPretrain),revision `896f3964301821d0bdd92ccb9560fbf51b855599` | CC BY-NC-SA 4.0 in the pinned model card | `weights/flashworld/pretrain.ckpt` |
-| TokenGS official base1024 | [TokenGS weights](https://huggingface.co/jiaweir/tokengs),`checkpoints/dl3dv_base.safetensors` | Apache-2.0 in root release; supplementary card differs (see notices) | `weights/tokengs/dl3dv_base.safetensors` |
+| Component | Source | Default local path |
+| --- | --- | --- |
+| Wan2.2 TI2V-5B Diffusers snapshot | [Wan-AI/Wan2.2-TI2V-5B-Diffusers](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers),revision `b8fff7315c768468a5333511427288870b2e9635` | `weights/wan/` |
+| FlashWorld NVS pretraining checkpoint | [nightkiller/FlashWorldPretrain](https://huggingface.co/nightkiller/FlashWorldPretrain),revision `896f3964301821d0bdd92ccb9560fbf51b855599` | `weights/flashworld/pretrain.ckpt` |
+| TokenGS official base1024 | [TokenGS weights](https://huggingface.co/jiaweir/tokengs),`checkpoints/dl3dv_base.safetensors` | `weights/tokengs/dl3dv_base.safetensors` |
 
 Wan requires its`transformer/`, `vae/`, `text_encoder/`and`tokenizer/`directories.
 Download the complete pinned snapshot using the Hugging Face CLI, for example:
@@ -69,21 +69,8 @@ The masked 512-token empty UMT5 prompt is cached on first training startup.
 LPIPS-VGG weights are downloaded/cached by LPIPS/torchvision at first evaluation;
 prepare the cache ahead of time on offline machines.
 
-**Public main-model checkpoint:** [qyk21/DiTGS](https://huggingface.co/qyk21/DiTGS).
-This is the camera-fixed **raw warmup10k + joint20k final**, approximately 22.055 GB,
-with original tensor dtypes and all inference buffers. It contains the fine-tuned
-Wan/GS parameters, frozen VAE/image encoder and cached empty prompt. It excludes
-optimizer, EMA and RNG state. Separate pretrained downloads above are needed for
-training from initialization; loading this full package does not require them.
-
-```bash
-hf download qyk21/DiTGS --revision 4c82bf40340625488cb3ca0e10c719d0684f55f7 --local-dir weights/ditgs
-```
-
-The `model.pt` SHA256 is
-`d20e90297953151a90ac53c9022ddf8530eaa7f6359e3e74a7bec8654e2c48c9`.
-The model card contains the checkpoint license, attribution and component sizes.
-Training your own model also produces a compatible `outputs/residual/model.pt`.
+The full camera-fixed Residual CA checkpoint (warmup 10k + joint 20k, approximately 22.055 GB) is available on [Hugging Face](https://huggingface.co/qyk21/DiTGS).
+Download `model.pt` to `weights/ditgs/model.pt` for the standard 1-/2-view inference below; all required model weights and buffers are included.
 
 ## DL3DV data
 
@@ -177,30 +164,10 @@ keeps independent 2-view real and 8-view generated memories.
 
 ## License and citation
 
-Source code is released under **Apache-2.0**; see [LICENSE](LICENSE) and
-[NOTICE](NOTICE). This does not grant a license to pretrained or trained weights.
-TokenGS source copyright and attribution are retained. Installed dependencies
-keep their own licenses.
-
-The published checkpoint uses **CC BY-NC-SA 4.0**, inheriting the
-[FlashWorldPretrain weight terms](https://huggingface.co/nightkiller/FlashWorldPretrain/blob/896f3964301821d0bdd92ccb9560fbf51b855599/README.md),
-and is intended for noncommercial academic research. Retain attribution, identify
-modifications and comply with ShareAlike when sharing adaptations. The code and
-checkpoint licenses are separate.
-
-The TokenGS root release README states Apache-2.0; an additional model card at the
-same upstream revision names a restrictive NVIDIA internal-research license.
-This weight release follows the root release declaration and preserves the
-inconsistent statement explicitly in its
-[upstream notices](https://huggingface.co/qyk21/DiTGS/blob/main/UPSTREAM_NOTICES.md).
-No separate written upstream clarification is claimed. Research purpose alone
-does not override applicable upstream terms. See the model repository's LICENSE,
-NOTICE and model card for attribution and component-specific details.
-
-[DL3DV-10K](https://github.com/DL3DV-10K/Dataset/blob/main/License.md) has its own
-noncommercial research/education and data-access terms. Obtain data from upstream;
-no dataset media are included here. See [CITATION.cff](CITATION.cff) for software
-citation; paper bibliographic details will be added when available.
+Source code is released under **Apache-2.0**; see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+Pretrained weights, datasets and installed dependencies retain their upstream terms;
+see the [checkpoint model card](https://huggingface.co/qyk21/DiTGS) for weight documentation.
+See [CITATION.cff](CITATION.cff) for software citation; paper bibliographic details will be added when available.
 
 This curated release has received static source, configuration, dependency-closure
 and syntax checks. CUDA training/inference were not rerun as part of publication.
