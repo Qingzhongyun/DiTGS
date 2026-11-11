@@ -1,0 +1,16 @@
+DiTGS
+Copyright2026 DiTGS contributors.
+
+This source release contains modified TokenGS components originating from:
+TokenGS, Copyright(c)2025 NVIDIA CORPORATION & AFFILIATES.
+https://github.com/nv-tlabs/TokenGS
+Upstream reference:b16269c500a8894cda342bc9cf406e31169541e3
+License:Apache License2.0; original file notices are retained.
+Changes include calibrated camera preprocessing, static feature-readout interfaces,
+activation/gradient safeguards and Residual Cross-Attention integration.
+
+Wan/Diffusers/Transformers,gsplat,fused-ssim and LPIPS are external dependencies,
+not relicensed by this repository. Downloaded model weights and DL3DV data remain
+subject to their respective upstream terms; they are not distributed in this Git tree.
+FlashWorld initialization retains only the pretrained latent-velocity transformer;
+its Gaussian-feature output channels and reconstruction decoder are not used.

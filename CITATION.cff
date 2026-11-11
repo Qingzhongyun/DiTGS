@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the associated DiTGS paper when available; this repository can be cited as software in the meantime."
+type: software
+title: "DiTGS: Residual Cross-Attention Feature Readout"
+authors:
+  - name: "DiTGS contributors"
+version: 0.1.0
+date-released: 2026-11-11
+license: Apache-2.0
+repository-code: "https://github.com/Qingzhongyun/DiTGS"
+url: "https://github.com/Qingzhongyun/DiTGS"

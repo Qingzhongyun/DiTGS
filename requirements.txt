@@ -1,0 +1,2 @@
+# Install the matching CUDA PyTorch build first; see README.
+-e .[renderer]
