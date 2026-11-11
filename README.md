@@ -42,11 +42,11 @@ attention uses PyTorch SDPA.
 
 Place the following locally before training; large weights are not in Git.
 
-| Component | Source | Default local path |
-| --- | --- | --- |
-| Wan2.2 TI2V-5B Diffusers snapshot | [Wan-AI/Wan2.2-TI2V-5B-Diffusers](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers),revision `b8fff7315c768468a5333511427288870b2e9635` | `weights/wan/` |
-| FlashWorld NVS pretraining checkpoint | [nightkiller/FlashWorldPretrain](https://huggingface.co/nightkiller/FlashWorldPretrain),revision `896f3964301821d0bdd92ccb9560fbf51b855599` | `weights/flashworld/pretrain.ckpt` |
-| TokenGS official base1024 | [TokenGS weights](https://huggingface.co/jiaweir/tokengs),`checkpoints/dl3dv_base.safetensors` | `weights/tokengs/dl3dv_base.safetensors` |
+| Component | Source | Weight terms | Default local path |
+| --- | --- | --- | --- |
+| Wan2.2 TI2V-5B Diffusers snapshot | [Wan-AI/Wan2.2-TI2V-5B-Diffusers](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers),revision `b8fff7315c768468a5333511427288870b2e9635` | Apache-2.0 | `weights/wan/` |
+| FlashWorld NVS pretraining checkpoint | [nightkiller/FlashWorldPretrain](https://huggingface.co/nightkiller/FlashWorldPretrain),revision `896f3964301821d0bdd92ccb9560fbf51b855599` | CC BY-NC-SA 4.0 in the pinned model card | `weights/flashworld/pretrain.ckpt` |
+| TokenGS official base1024 | [TokenGS weights](https://huggingface.co/jiaweir/tokengs),`checkpoints/dl3dv_base.safetensors` | Conflicting upstream declarations; redistribution not cleared (see below) | `weights/tokengs/dl3dv_base.safetensors` |
 
 Wan requires its`transformer/`, `vae/`, `text_encoder/`and`tokenizer/`directories.
 Download the complete pinned snapshot using the Hugging Face CLI, for example:
@@ -57,6 +57,10 @@ hf download nightkiller/FlashWorldPretrain pretrain.ckpt --revision 896f39643018
 ```
 
 Use the original base1024 TokenGS file, not the newer 4096-token or bottleneck model.
+The base file is 875534824 bytes, with SHA256
+`ac6cb611e3b19ea4aaaeae32c952cf7555f68ef3e70b03199f24c0860245bba8`,
+matching `checkpoints/dl3dv_base.safetensors` in upstream revision
+`a7eb20340b99abd29b554c29c339446aebccff36`.
 `ditgs/flashworld.py` extracts the 48-channel latent-velocity output and the
 54 pretrained condition channels directly from the original FlashWorld checkpoint.
 Its 1024-channel GS-feature output and reconstruction decoder are discarded.
@@ -162,10 +166,27 @@ keeps independent 2-view real and 8-view generated memories.
 
 ## License and citation
 
-Code is released under **Apache-2.0**; see [LICENSE](LICENSE) and [NOTICE](NOTICE).
-TokenGS copyright and attribution are retained. External weights, datasets and
-installed dependencies keep their own licenses. See [CITATION.cff](CITATION.cff)
-for software citation;paper bibliographic details will be added when available.
+Source code is released under **Apache-2.0**; see [LICENSE](LICENSE) and
+[NOTICE](NOTICE). This does not grant a license to pretrained or trained weights.
+TokenGS source copyright and attribution are retained. Installed dependencies
+keep their own licenses.
+
+**Trained-weight redistribution is pending upstream license clarification.**
+The pinned [FlashWorldPretrain model card](https://huggingface.co/nightkiller/FlashWorldPretrain/blob/896f3964301821d0bdd92ccb9560fbf51b855599/README.md)
+declares **CC BY-NC-SA 4.0**, which requires noncommercial sharing, attribution,
+change notices and ShareAlike terms for adaptations. FlashWorld's Apache-2.0
+source license does not replace its weight terms. The TokenGS root README says
+Apache-2.0, but its [separate model card](https://huggingface.co/jiaweir/tokengs/blob/a7eb20340b99abd29b554c29c339446aebccff36/model_card/overview.md)
+explicitly names the [NVIDIA Internal Scientific Research and Development Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-internal-scientific-research-and-development-model-license/),
+whose section 3.1 prohibits distribution of the model and derivative models.
+Until the rights holder resolves these declarations for the exact base checkpoint,
+this project does not assert permission to redistribute combined DiTGS weights.
+Splitting files or publishing weight deltas does not by itself resolve that issue.
+
+[DL3DV-10K](https://github.com/DL3DV-10K/Dataset/blob/main/License.md) has its own
+noncommercial research/education and data-access terms. Obtain data from upstream;
+no dataset media are included here. See [CITATION.cff](CITATION.cff) for software
+citation; paper bibliographic details will be added when available.
 
 This curated release has received static source, configuration, dependency-closure
 and syntax checks. CUDA training/inference were not rerun as part of publication.

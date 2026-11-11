@@ -14,3 +14,13 @@ not relicensed by this repository. Downloaded model weights and DL3DV data remai
 subject to their respective upstream terms; they are not distributed in this Git tree.
 FlashWorld initialization retains only the pretrained latent-velocity transformer;
 its Gaussian-feature output channels and reconstruction decoder are not used.
+
+Weight-license clarification (2026-11-11):
+The Apache-2.0 license in this source tree does not license model checkpoints.
+FlashWorldPretrain revision 896f3964301821d0bdd92ccb9560fbf51b855599
+identifies its weights as CC BY-NC-SA 4.0. TokenGS has conflicting declarations:
+its root README mentions Apache-2.0, while model_card/overview.md names the NVIDIA
+Internal Scientific Research and Development Model License. That model license
+prohibits redistribution of models and derivative models. No trained-weight
+redistribution permission is asserted pending upstream clarification.
+See README.md for source links and the exact TokenGS base-file checksum.
